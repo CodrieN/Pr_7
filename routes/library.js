@@ -1,18 +1,20 @@
 const express = require("express");
-
 const router = express.Router();
-
 const libraryCtrl = require("../controllers/book");
-
+const auth = require("../middleware/auth");
+const multer = require("../middleware/multer-config");
+const sharp = require("sharp");
 // ***********************************************************************************
 // * C R U D *
 // ***********************************************************************************
 
 router.post("/", auth, multer, libraryCtrl.createBook);
-router.put("/:id", auth, libraryCtrl.modifyBook);
+router.post("/:id/rating", auth, libraryCtrl.ratingBook);
+router.put("/:id", auth, multer, libraryCtrl.modifyBook);
 router.delete("/:id", auth, libraryCtrl.deleteBook);
-router.get("/", libraryCtrl.getOneBook);
-router.get("/:id", libraryCtrl.getAllBook);
+router.get("/bestrating", libraryCtrl.getBestRatingBooks);
+router.get("/", libraryCtrl.getAllBook);
+router.get("/:id", libraryCtrl.getOneBook);
 
 // todo | ajouter /api/books/:id/rating POST  | login requis | { userId: String, rating: Number } | Définit la note pour le user ID fourni.
 // todo | La note doit être comprise entre 0 et 5.

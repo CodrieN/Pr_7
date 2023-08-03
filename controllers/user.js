@@ -1,6 +1,9 @@
 const jwt = require("jsonwebtoken");
+const User = require("../models/user");
+const bcrypt = require("bcrypt");
 
 exports.signup = (req, res, next) => {
+  console.log(req.body);
   bcrypt
     .hash(req.body.password, 10)
     .then((hash) => {
@@ -30,9 +33,7 @@ exports.login = (req, res, next) => {
           }
           res.status(200).json({
             userId: user._id,
-            // ! RANDOM_TOKEN_SECRET remplacer par une chaîne aléatoire beaucoup plus longue
-            token: jwt.sign({ userId: user._id }, "RANDOM_TOKEN_SECRET", {
-              // ! RANDOM_TOKEN_SECRET remplacer par une chaîne aléatoire beaucoup plus longue
+            token: jwt.sign({ userId: user._id }, process.env.TOKENSECRET, {
               expiresIn: "24h",
             }),
           });

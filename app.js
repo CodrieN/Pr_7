@@ -9,9 +9,11 @@ const app = express();
 const libraryRoutes = require("./routes/library");
 const userRoutes = require("./routes/user");
 
+require("dotenv").config();
+
 mongoose
   .connect(
-    "mongodb+srv://adrienmarguin:OLPh2eCELARkNWxa@cluster0.0w2qxq9.mongodb.net/?retryWrites=true&w=majority",
+    "mongodb+srv://" + process.env.AUTHDB + "/?retryWrites=true&w=majority",
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then(() => console.log("Connexion à MongoDB réussie !"))
@@ -37,7 +39,7 @@ app.use((req, res, next) => {
 });
 
 // * ajoutons le premier middleware avec notre premiere route.
-//  la route est la partie de l'url qui suit le nom de domaine soit ici http://localhost:3000/api/books (devra être différent en prod)
+//  la route est la partie de l'url qui suit le nom de domaine soit ici http://localhost:4000/api/books (devra être différent en prod)
 //  le middleware est la fonction qui sera exécutée à chaque appel de cette route
 // * la fonction prend 3 arguments: req, res et next
 //  req est l'objet représentant la requête entrante
@@ -69,7 +71,8 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 
-app.use("/api/book", libraryRoutes);
+app.use("/api/books", libraryRoutes);
 app.use("/api/auth", userRoutes);
+app.use("/images", express.static("images"));
 
 module.exports = app;
